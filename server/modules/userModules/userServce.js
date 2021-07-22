@@ -4,10 +4,7 @@ const bcrypt = require('bcryptjs')
 const auth = require('../middleware/middleware')
 
 const addUser = async (req) => {
-    const Token = await req.cookies.jwtToken 
-    if(Token) {
-        return 1
-    }   
+     
     let query = {
             email : req.body.email
        }  
