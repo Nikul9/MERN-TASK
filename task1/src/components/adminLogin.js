@@ -37,10 +37,10 @@ const login = () => {
                 })
                 const data = await res.json()
                 if(data.status === 200) {
-                dispatch({type : "PRODUCT_ID",  payload : "admin" })
-                    window.alert('success')
+                // dispatch({type : "PRODUCT_ID",  payload : "admin" })
+                   history.push('/allUser')
                 } else {
-                    window.alert('Error')
+                   alert('Error')
                 }
         }
         const cheakAuth = async () => {

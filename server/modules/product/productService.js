@@ -44,8 +44,18 @@ const productDelete = async (req) => {
 }
 
 const AllProduct = async (req) => {
-    const products = await product.find({})
-    return products
+    console.log('callfrom frontend')
+    console.log(req.query.page)
+    const currentPage = parseInt(req.query.page) || 1
+    const pageSize = parseInt(req.query.limit)  || 3
+    const skip =  (currentPage - 1) * pageSize;
+    const total = await product.countDocuments()
+    const totalPages = Math.ceil(total / pageSize) 
+    if(currentPage > totalPages) {        
+        return 1
+    }
+    const products = await product.find().skip(skip).limit(pageSize)
+    return {products , total , totalPages , pageSize , currentPage }
 }
 
 const findOneProduct = async(req) => {

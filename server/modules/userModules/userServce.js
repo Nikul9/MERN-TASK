@@ -168,10 +168,21 @@ const adminDelete = async (req) => {
 }
 
 const AllUser  = async (req) => {
+    const currentPage = parseInt(req.query.page) || 1
+    const pageSize = parseInt(req.query.limit)  || 3
+    const skip =  (currentPage - 1) * pageSize;
+    const total = await userData.countDocuments()
+    const totalPages = Math.ceil(total / pageSize) 
+    if(currentPage > totalPages) {
+        return 1
+    }
     if(req.user.role == "Admin") {
-        const ussers = await userData.find({})
-        return ussers
+        const ussers = await userData.find().skip(skip).limit(pageSize)
+        console.log('in success');
+        
+        return {ussers , totalPages , currentPage , pageSize , total }
     } else {
+        console.log('in else')
         return 1;
     }
 }

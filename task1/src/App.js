@@ -28,8 +28,8 @@ function App() {
     <UserContext.Provider value={{state,dispatch}}> 
       <Header />
       <Route exact path="/" component={Login} /> 
-      <Route path="/alluser"      component={AllUser} /> 
-      <Route path="/allproduct"   component={AllProduct} /> 
+      <Route path="/alluser"      component={AllUser} />
+      <Route path="/allproduct"      component={AllProduct} />  
       <Route path="/regiester"    component={Regiester} /> 
       <Route path="/editproduct"  component={EditProduct} /> 
       <Route path="/edituser"     component={EditUser} />       

@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-undef */
 /* eslint-disable react-hooks/rules-of-hooks */
@@ -5,10 +6,14 @@
 import React, { useContext, useEffect, useState } from "react"
 import { useHistory } from "react-router"
 import { UserContext } from "../App"
+import Pagination from './pagination'
 
 const allProduct = () => {
 
 const history = useHistory()
+const [pageSize , setPageSize] = useState()
+const [currentPage , setcurrentPage] = useState()
+const [totalItem , setTotalItem ] = useState()
 const [productData , setProduct] = useState([])
 const {state, dispatch } = useContext(UserContext)
         const UpdateProduct = (e) => {
@@ -17,6 +22,7 @@ const {state, dispatch } = useContext(UserContext)
             history.push('/editproduct')
         } 
         const deleteProduct = async(e) => {
+            if (confirm('Are you sure you want to Delete this Record ?')) {
             const id = e.target.value
             console.log(id)
             const res = await fetch(`/deleteProduct/${id}`,{
@@ -24,9 +30,12 @@ const {state, dispatch } = useContext(UserContext)
             })
                 window.location.reload(false)
            
+            } else {
+                console.log('Return');
+            }
         }
         const product = async () => {
-        const res = await fetch('/AllProduct',{
+        const res = await fetch(`/AllProduct?page=${currentPage}`,{
             method : "GET",
             headers : {
                 Acction : "application/json",
@@ -36,19 +45,18 @@ const {state, dispatch } = useContext(UserContext)
         })
         const data = await res.json()
         if(data.status === 200) {
-            console.log(data.data);
-            const [callData] =  data.data
-            console.log([callData]);
-            setProduct(data.data)
-           
+            setProduct(data.data.products)
+            setTotalItem(data.data.total)
+            setPageSize(data.data.pageSize)
         } else {
             history.push('/')
         }
     }
     
     useEffect(() => {
+        console.log('werwerwer');
         product()
-    },[])
+    },[currentPage])
     return (
         <>
         <div className="col-sm-9"></div>
@@ -74,7 +82,8 @@ const {state, dispatch } = useContext(UserContext)
                     </tr>
                 </tbody>)
             }
-        </table>    
+        </table> 
+        <Pagination totalItem={totalItem} pageSize={pageSize} pageNumber={currentPage} currentPage={setcurrentPage}  />
         </>
     )
 }
